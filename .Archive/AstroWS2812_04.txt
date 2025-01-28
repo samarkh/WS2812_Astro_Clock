@@ -1,0 +1,2 @@
+This version suppresses sun marker before sunrise and after sunset
+displays hour markers

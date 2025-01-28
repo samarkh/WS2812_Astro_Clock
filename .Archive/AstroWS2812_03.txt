@@ -1,0 +1,17 @@
+### Arduino LED Clock with Sunrise/Sunset Tracking
+
+This Arduino code creates a 24-hour clock visualization using an LED strip (332 LEDs). It:
+
+1. Fetches sunrise, sunset, and solar noon times daily from the sunrise-sunset.org API
+2. Maps the 24-hour day across the LED strip
+3. Shows current time as a yellow LED
+4. Displays daylight hours with very dim blue LEDs
+5. Keeps solar noon LED off
+6. Calculates LED positions using seconds-per-LED ratio (24hrs/332 LEDs)
+7. Includes serial debugging output for time and LED positions
+
+Key features:
+- Updates sun data once per day
+- Uses real-world astronomical data
+- Safety checks for LED array bounds
+- UTC/local time handling
