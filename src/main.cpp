@@ -1,56 +1,9 @@
-// Created: 2021-04-25 16:00:00
-/*
-
-This Arduino code creates a 24-hour clock visualization using an LED strip (332 LEDs). It:
-
-1. Fetches sunrise, sunset, and solar noon times daily from the sunrise-sunset.org API
-2. Maps the 24-hour day across the LED strip
-3. Shows current time as a yellow LED
-4. Displays daylight hours with very dim blue LEDs
-5. Keeps solar noon LED off
-6. Hour markers (dim red LEDs)
-7. Calculates LED positions using seconds-per-LED ratio (24hrs/332 LEDs)
-8. Includes serial debugging output for time and LED positions
-
-Key features:
-- Updates sun data once per day
-- Uses real-world astronomical data
-- Safety checks for LED array bounds
-- UTC/local time handling
-
-*/
-/*
-24-Hour LED Clock with Daylight Tracking
-This code drives a 332 LED strip to create a 24-hour clock showing current time,
-daylight period, hour markers, and solar events.
-*/
-
-/*
-
-1. Added clear section headers with comment separators
-2. Grouped related constants and configurations together
-3. Added BRIGHTNESS as a define for easier adjustment
-4. Improved spacing and alignment for readability
-5. Added more descriptive comments for each section
-6. Split long lines into multiple lines where appropriate
-7. Organized code into logical sections:
-   - Configuration Constants
-   - Solstice Time Definitions
-   - Data Structures
-   - API Functions
-   - Setup & Loop
-8. Added color descriptions in comments
-9. Improved formatting of debug output
-
-Would you like me to make any additional organization changes or adjust any of the sections?
-*/
-
 #include <Arduino.h>
 #include <FastLED.h>
 #include <WiFi.h>
 #include <time.h>
 #include <HTTPClient.h>
-#include <ArduinoJson.h>
+#include <ArduinoJson.h> folder name is AstroWS2812
 
 //-----------------------------------------------------------------------------
 // Configuration Constants
@@ -63,13 +16,13 @@ Would you like me to make any additional organization changes or adjust any of t
 #define BRIGHTNESS      50      // LED brightness (0-255)
 
 // Network configuration
-const char* ssid      = "TP-LINK_2B90";
-const char* password  = "35702504";
+const char* ssid      = "Your_SSID";
+const char* password  = "Your_PASSWORD";
 const char* ntpServer = "pool.ntp.org";
 
 // Location configuration
-const double LATITUDE  = 51.85090238;   // Latitude for Gloucester, UK
-const double LONGITUDE = -2.2010652;    // Longitude for Gloucester, UK
+const double LATITUDE  = 51.4785810;    // Your latitude
+const double LONGITUDE = -0.0012920;    // Your Longitude
 
 // Time calculations
 static const int SECONDS_PER_LED = (24*60*60) / NUM_LEDS;   // Seconds per LED
@@ -88,7 +41,8 @@ int convertTimeToMinutes(const char* timeStr)
     return (hours * 60) + minutes;
 }
 
-// Define solstice times
+// Define solstice times Found using https://www.timeanddate.com
+
 const int winterSolsticeSunrise = convertTimeToMinutes("08:47");    // Winter solstice sunrise
 const int winterSolsticeSunset  = convertTimeToMinutes("16:02");    // Winter solstice sunset
 const int summerSolsticeSunrise = convertTimeToMinutes("03:47");    // Summer solstice sunrise
@@ -263,36 +217,3 @@ void loop()
     FastLED.show();
     delay(1000);
 }
-
-/*
-Here's a breakdown of the code's key components:
-
-CONSTANTS & SETUP:
-- 332 LED strip on pin 48 using WS2812B protocol
-- WiFi and geolocation settings for Gloucester, UK
-- NTP time server with no timezone offset
-
-DATA STRUCTURES:
-- `SunData`: Stores daily sun event times in minutes and last update timestamp
-- `getSunData()`: Fetches sunrise/sunset/solar noon from API, converts UTC to local time
-
-MAIN LOOP CALCULATIONS:
-- Seconds per LED = 86400 (24hrs) / 332 LEDs
-- Current time mapped to LED position: currentSecond / SECONDS_PER_LED
-- Sun events mapped similarly using their minute values
-
-LED CONTROL:
-- Daylight period (sunrise to sunset): Dim blue (0,0,8)
-- Current time: Yellow (255,255,0)
-- Solar noon: LED remains off
-- Updates every second with bounds checking
-
-DEBUGGING:
-Serial output shows:
-- Current time and LED position
-- Sun event times and corresponding LEDs
-- Loop cycle marker
-
-The system creates a 24-hour clock visualization where one LED represents about 4.3 minutes of time.
-
-*/
